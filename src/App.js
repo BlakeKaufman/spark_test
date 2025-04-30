@@ -107,27 +107,25 @@ function App() {
 
     // setInvoice(invoice.invoice.encodedInvoice);
   };
-  const sendPayment = async () => {
+  const sendPayment = async (invoice) => {
     if (!sparkWallet) {
       console.error("Spark client not initialized");
       return;
     }
     console.log("Starting payment process");
     const fee = await sparkWallet.getLightningSendFeeEstimate({
-      encodedInvoice:
-        "lnbc5330n1p5py5qwpp5z498whg22gkcq35gz27v6vczr7kxcr6dgkh0utvwwa6378j322rssp52tf9rsy32gl0h4dfzf0lsm4lxv8tjf08sp668k76stfwvryd3paqxq9z0rgqnp4qvyndeaqzman7h898jxm98dzkm0mlrsx36s93smrur7h0azyyuxc5rzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqrt49lmtcqqqqqqqqqqqthqq9qrzjqwghf7zxvfkxq5a6sr65g0gdkv768p83mhsnt0msszapamzx2qvuxqqqqrt49lmtcqqqqqqqqqqqthqq9qcqzpgdpq2dcxzuntyptkzmrvv46zq3r9wphhx6t59qyyssqgsmsedxep99vcg9u7tqmcp5d2ck2s05s4mxstn0j42hj5xt9d5xrf9w5s08d7qq9a7azjven7z0exew6txhqmyyhkmlqya4rg9ry7yqp62kf36",
+      encodedInvoice: invoice,
     });
 
     console.log(fee);
     const response = await sparkWallet.payLightningInvoice({
-      invoice:
-        "lnbc5330n1p5py5qwpp5z498whg22gkcq35gz27v6vczr7kxcr6dgkh0utvwwa6378j322rssp52tf9rsy32gl0h4dfzf0lsm4lxv8tjf08sp668k76stfwvryd3paqxq9z0rgqnp4qvyndeaqzman7h898jxm98dzkm0mlrsx36s93smrur7h0azyyuxc5rzjq25carzepgd4vqsyn44jrk85ezrpju92xyrk9apw4cdjh6yrwt5jgqqqqrt49lmtcqqqqqqqqqqqthqq9qrzjqwghf7zxvfkxq5a6sr65g0gdkv768p83mhsnt0msszapamzx2qvuxqqqqrt49lmtcqqqqqqqqqqqthqq9qcqzpgdpq2dcxzuntyptkzmrvv46zq3r9wphhx6t59qyyssqgsmsedxep99vcg9u7tqmcp5d2ck2s05s4mxstn0j42hj5xt9d5xrf9w5s08d7qq9a7azjven7z0exew6txhqmyyhkmlqya4rg9ry7yqp62kf36",
+      invoice: invoice,
     });
     console.log(response);
 
     setPaymentResponse(response);
   };
-  const sendSparkPayment = async () => {
+  const sendSparkPayment = async (sparkAddress) => {
     if (!sparkWallet) {
       console.error("Spark client not initialized");
       return;
@@ -136,8 +134,7 @@ function App() {
 
     const response = await sparkWallet.transfer({
       amountSats: 100,
-      receiverSparkAddress:
-        "sp1pgssxmwne6jf879cnreq452u24jvauzgxh62rasy6zxcwzafjua3jh4cz35ghj",
+      receiverSparkAddress: sparkAddress,
     });
     console.log(response);
   };
@@ -227,39 +224,26 @@ function App() {
         <p>Invoice: {invoice}</p>
         <button onClick={getSparkBitcoinL1Address}>Get Bitcoin address</button>
         <p>Bitcoin address: {bitcoinAddr}</p>
-        <button
-          onClick={() =>
-            querySparkBitcoinL1Transaction(
-              "bc1p7tmkn6u0jxsmjz2h85w0rrpjfqedzexf73las63kzdrht7hyyweqty0d9j"
-            )
-          }
-        >
+        <button onClick={() => querySparkBitcoinL1Transaction("")}>
           Query address
         </button>
-        <button
-          onClick={() =>
-            claimSparkBitcoinL1Transaction(
-              "bc1p7tmkn6u0jxsmjz2h85w0rrpjfqedzexf73las63kzdrht7hyyweqty0d9j"
-            )
-          }
-        >
+        <button onClick={() => claimSparkBitcoinL1Transaction("")}>
           Claim Bitcoin address
         </button>
         <button
           onClick={() =>
             sendBitcoinPayment({
               amountSats: 2000,
-              onchainAddress:
-                "bc1qv8vj9muuyv3zqnsf9mycvgu2jgeuw2qk6jdssk2cp9q5mdn2ayas6xjj7d",
+              onchainAddress: "",
             })
           }
         >
           Send Bitcoin l1
         </button>
 
-        <button onClick={sendPayment}>Send payment</button>
+        <button onClick={() => sendPayment("")}>Send payment</button>
         <p>Pay invoice: {JSON.stringify(paymentResponse)}</p>
-        <button onClick={sendSparkPayment}>Send spark payment</button>
+        <button onClick={() => sendSparkPayment("")}>Send spark payment</button>
         <button onClick={getBalance}>Get Balance</button>
         <p>Balance: {balance}</p>
         <button onClick={getTransactions}>Get Transactions</button>
