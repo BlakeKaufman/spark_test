@@ -18,12 +18,13 @@ function App() {
 
   const initializeSpark = async () => {
     try {
-      const { wallet } = await SparkWallet.initialize({
+      const { wallet, mnemonic } = await SparkWallet.initialize({
         mnemonicOrSeed: undefined,
         options: {
           network: "MAINNET",
         },
       });
+      console.log(mnemonic);
 
       setSparkWallet(wallet);
       console.log("Spark client initialized successfully!");
